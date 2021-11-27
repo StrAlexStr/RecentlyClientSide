@@ -4,23 +4,27 @@ import { useEffect, useState, useContext } from "react";
 import { BiGhost } from "react-icons/bi";
 import { BsSignpost } from "react-icons/bs";
 import { AuthContext } from "../../context/AuthContext";
+import { SpinnerDotted } from "spinners-react";
 
-function MapBar({ isFollowingBar, username }) {
+function MapBar({ isFollowingBar, profileUser }) {
   const [posts, setPosts] = useState([]);
   const { user } = useContext(AuthContext);
+  const [postsLoaded, setPostsLoaded] = useState(false);
 
   useEffect(() => {
     const postsFetch = async () => {
       if (isFollowingBar) {
         const res = await axios.get(`/posts/get/following/${user._id}`);
         setPosts(res.data);
+        setPostsLoaded(true);
       } else {
-        const res = await axios.get(`/posts/all_posts/?username=${username}`);
+        const res = await axios.get(`/posts/all_posts/${profileUser._id}`);
         setPosts(res.data);
+        setPostsLoaded(true);
       }
     };
     postsFetch();
-  }, [username]); //maybe use username here
+  }, [profileUser, user]);
 
   return (
     <div className="bg-white bg-opacity-50 backdrop-filter backdrop-blur-md w-1/5 p-6 absolute z-10 inset-y-0 right-0 m-5 overflow-auto rounded-lg flex flex-col items-center scrollbar scrollbar-thumb-secondary-dark scrollbar-thin scrollbar-thumb-rounded-lg">
@@ -28,34 +32,46 @@ function MapBar({ isFollowingBar, username }) {
         className="text-2xl text-secondary-dark mb-4"
         style={{ fontFamily: "Baloo2" }}
       >
-        {isFollowingBar ? "Following Feed" : `${username}'s posts'`}
+        {isFollowingBar ? "Following Feed" : `${profileUser.username}'s posts`}
       </p>
-      {posts.length > 0 ? (
-        posts.map((postData) => {
-          <Post
-            isFullPost={isFollowingBar}
-            postData={postData}
-            key={postData._id}
-          />;
-        })
+      {postsLoaded ? (
+        posts.length > 0 ? (
+          posts.map((postData) => {
+            return (
+              <Post
+                isFullPost={isFollowingBar}
+                postData={postData}
+                key={postData._id}
+              />
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center text-center justify-center w-full">
+            <span
+              className="pt-20 font-bold text-logo text-3xl text-center"
+              style={{ fontFamily: "Baloo2" }}
+            >
+              {isFollowingBar
+                ? "You are currently following no one"
+                : "No posts to be seen here"}
+              <div className="flex flex-row items-center justify-center mt-10  animate-bounce ">
+                {isFollowingBar ? (
+                  <BiGhost className="font-bold text-6xl" />
+                ) : (
+                  <BsSignpost className="font-bold text-5xl" />
+                )}
+              </div>
+            </span>
+          </div>
+        )
       ) : (
-        <div className="flex flex-col items-center text-center justify-center w-full">
-          <span
-            className="pt-20 font-bold text-logo text-3xl text-center"
-            style={{ fontFamily: "Baloo2" }}
-          >
-            {isFollowingBar
-              ? "You are currently following no one"
-              : "No posts to be seen here"}
-            <div className="flex flex-row items-center justify-center mt-10  animate-bounce ">
-              {isFollowingBar ? (
-                <BiGhost className="font-bold text-6xl" />
-              ) : (
-                <BsSignpost className="font-bold text-5xl" />
-              )}
-            </div>
-          </span>
-        </div>
+        <SpinnerDotted
+          size={50}
+          thickness={120}
+          speed={100}
+          className="mt-8"
+          color="rgba(155,106,108, 1)"
+        />
       )}
     </div>
   );

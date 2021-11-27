@@ -8,12 +8,11 @@ import axios from "axios";
 
 function Profile() {
   const username = useParams().username;
-  const [currentUser, setCurrentUser] = useState({});
-
+  const [profileUser, setProfileUser] = useState({});
   useEffect(() => {
     const userFetch = async () => {
-      const res = await axios.get(`/users/?username=${username}`);
-      setCurrentUser(res.data);
+      const res = await axios.get(`/users?username=${username}`);
+      setProfileUser(res.data);
     };
     userFetch();
   }, [username]);
@@ -21,9 +20,9 @@ function Profile() {
   return (
     <div className="flex h-screen w-screen relative z-0">
       <NavBar />
-      <ProfileMainData user={currentUser} />
-      {/* <WrappedMap /> */}
-      <MapBar isFollowingBar={false} username={username} />
+      <ProfileMainData user={profileUser} />
+      <WrappedMap />
+      <MapBar isFollowingBar={false} profileUser={profileUser} />
     </div>
   );
 }

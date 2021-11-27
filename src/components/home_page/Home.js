@@ -9,7 +9,7 @@ function Home() {
     <div className="flex h-screen w-screen relative z-0">
       <NavBar />
       <Feed isFullPost={isFullPost} />
-      {/* <WrappedMap /> */}
+      <WrappedMap />
       <MapBar isFullPost={isFullPost} isFollowingBar={true} />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SearchFeed from "./SearchFeed";
 import ChooseFeed from "./ChooseFeed";
 import PostFeed from "./PostFeed";
