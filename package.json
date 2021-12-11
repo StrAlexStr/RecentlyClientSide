@@ -10,12 +10,18 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@mui/material": "^5.2.1",
+    "@reach/combobox": "^0.16.4",
+    "@react-google-maps/api": "^2.7.0",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.24.0",
     "bootstrap": "^5.1.3",
+    "date-fns": "^2.26.0",
     "framer-motion": "^5.3.3",
+    "google-maps-react": "^2.0.6",
+    "javascript-time-ago": "^2.3.10",
+    "reach": "^1.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-google-maps": "^9.4.5",
@@ -27,6 +33,7 @@
     "typeface-baloo-2": "^1.1.13",
     "typeface-kalam": "^1.1.13",
     "typeface-poiret-one": "^1.1.13",
+    "use-places-autocomplete": "^1.10.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -58,5 +65,5 @@
     "postcss": "^7.0.39",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   },
-  "proxy": "http://localhost:8900/api"
+  "proxy": "http://localhost:8900/api/"
 }

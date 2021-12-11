@@ -1,4 +1,4 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { callLogin } from "../../callsFromApi";
 import { AuthContext } from "../../context/AuthContext";
@@ -7,7 +7,7 @@ import { SpinnerDotted } from "spinners-react";
 function LoginForm() {
   const emailRef = useRef();
   const passRef = useRef();
-  const { isFetching, dispatch } = useContext(AuthContext);
+  const { isFetching, dispatch, isError } = useContext(AuthContext);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -25,12 +25,21 @@ function LoginForm() {
       className="w-4/5 md:w-3/5 xl:w-2/5 2xl:w-2/6 flex flex-col items-center rounded-lg py-9
     px-6 bg-bg_login scale-75 lg:scale-100 my-10"
     >
+      {/* <button onClick={userAuthenticated}>userAuthenticated</button> */}
       <span
         className="text-5xl  font-bold mb-9 mx-5 text-secondary"
         style={{ fontFamily: "Josefin" }}
       >
         Login
       </span>
+      {isError && (
+        <p
+          className="text-center bg-no_acc px-4 py-2 rounded-lg mt-2 mb-4 text-main"
+          style={{ fontFamily: "Baloo2" }}
+        >
+          Email or password is incorrect <br /> Try again
+        </p>
+      )}
       <form
         action="#"
         className="w-full max-w-sm flex flex-col"

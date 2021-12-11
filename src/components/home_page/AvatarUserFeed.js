@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function AvatarUserFeed({ userData, includesCurrentUser }) {
   const PublicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
-    <Link to="/profile">
+    <Link to={`/profile/${userData.username}`}>
       <button className="my-5">
         <div className="flex flex-row items-center justify-around">
           <img

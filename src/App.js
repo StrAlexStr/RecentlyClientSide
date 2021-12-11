@@ -2,6 +2,7 @@ import Login from "./components/login_register/Login";
 import Register from "./components/login_register/Register";
 import Home from "./components/home_page/Home";
 import Profile from "./components/profile_page/Profile";
+import CreatePostPage from "./components/create_post_page/CreatePostPage";
 import {
   BrowserRouter as Router,
   Routes,
@@ -34,6 +35,10 @@ function App() {
           <Route
             path="/profile/:username"
             element={user ? <Profile /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/createPost"
+            element={user ? <CreatePostPage /> : <Navigate to="/" />}
           />
         </Routes>
       </Router>

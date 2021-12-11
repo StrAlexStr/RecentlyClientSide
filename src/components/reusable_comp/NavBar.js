@@ -1,6 +1,5 @@
 import { AiOutlineHome } from "react-icons/ai";
 import { RiAddBoxLine, RiUser3Line } from "react-icons/ri";
-
 import { RiBellFill } from "react-icons/ri";
 import { MdLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -12,6 +11,7 @@ function NavBar() {
 
   const handleLogout = () => {
     dispatch({ type: "LOGOUT" });
+    localStorage.setItem("token", null);
   };
 
   return (
@@ -30,9 +30,11 @@ function NavBar() {
             <RiUser3Line />
           </button>
         </Link>
-        <button className="my-8 hover:text-secondary-light">
-          <RiAddBoxLine />
-        </button>
+        <Link to={"/createPost"}>
+          <button className="my-8 hover:text-secondary-light">
+            <RiAddBoxLine />
+          </button>
+        </Link>
       </div>
       <Link to="/login">
         <button

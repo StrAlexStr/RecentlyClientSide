@@ -76,16 +76,7 @@ const styleExport = [
     elementType: "geometry.fill",
     stylers: [
       {
-        color: "#fd9836",
-      },
-      {
-        saturation: "85",
-      },
-      {
-        lightness: "31",
-      },
-      {
-        gamma: "1.24",
+        color: "#e2b4bd",
       },
     ],
   },

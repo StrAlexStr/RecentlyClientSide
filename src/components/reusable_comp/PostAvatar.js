@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
-import { AiOutlineCalendar, AiOutlineClockCircle } from "react-icons/ai";
+import { AiOutlineCalendar } from "react-icons/ai";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en.json";
 
 function PostAvatar({ userData, postDate }) {
+  TimeAgo.addLocale(en);
+  const timeAgo = new TimeAgo("en-US");
   const PublicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
     <Link to={`/profile/${userData.username}`}>
@@ -18,9 +22,7 @@ function PostAvatar({ userData, postDate }) {
             </span>
             <span className="flex flex-row font-medium text-sm text-opacity-75 text-main ">
               <AiOutlineCalendar className="text-lg mr-1" />
-              {postDate.split("T")[0]}{" "}
-              <AiOutlineClockCircle className="text-lg ml-4 mr-1" />
-              {postDate.split("T")[1].split(".")[0]}
+              {timeAgo.format(new Date(postDate))}
             </span>
           </div>
         </div>

@@ -5,7 +5,7 @@ import axios from "axios";
 import { SpinnerDotted } from "spinners-react";
 
 //sec
-function UserFeed() {
+function UserFeed({ sortElement }) {
   const [users, setUsers] = useState([]);
   const [usersLoaded, setUsersLoaded] = useState(false);
   const [followingOnly, setFollowingOnly] = useState(false);
@@ -18,7 +18,11 @@ function UserFeed() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await axios.get(`/users/get/all_users/${user._id}`);
+      const res = await axios.get(`/users/get/all_users/${user._id}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      });
       setUsers(res.data);
       setUsersLoaded(true);
     };
@@ -40,18 +44,51 @@ function UserFeed() {
       {usersLoaded ? (
         users.map((userData) => {
           if (followingOnly) {
-            if (userData.followers.includes(user._id)) {
-              console.log("includes");
-              return <AvatarUserFeed userData={userData} key={userData._id} />;
+            if (sortElement) {
+              if (
+                userData.followers.includes(user._id) &&
+                userData.username
+                  .toLowerCase()
+                  .includes(sortElement.toLowerCase())
+              ) {
+                return (
+                  <AvatarUserFeed userData={userData} key={userData._id} />
+                );
+              }
+              return null;
+            } else {
+              if (userData.followers.includes(user._id)) {
+                return (
+                  <AvatarUserFeed userData={userData} key={userData._id} />
+                );
+              }
+              return null;
             }
           } else {
-            return (
-              <AvatarUserFeed
-                userData={userData}
-                key={userData._id}
-                includesCurrentUser={userData.followers.includes(user._id)}
-              />
-            );
+            if (sortElement) {
+              if (
+                userData.username
+                  .toLowerCase()
+                  .includes(sortElement.toLowerCase())
+              ) {
+                return (
+                  <AvatarUserFeed
+                    userData={userData}
+                    key={userData._id}
+                    includesCurrentUser={userData.followers.includes(user._id)}
+                  />
+                );
+              }
+              return null;
+            } else {
+              return (
+                <AvatarUserFeed
+                  userData={userData}
+                  key={userData._id}
+                  includesCurrentUser={userData.followers.includes(user._id)}
+                />
+              );
+            }
           }
         })
       ) : (

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function RegisterForm() {
@@ -11,11 +11,44 @@ function RegisterForm() {
   const email = useRef();
   const gender = useRef();
   const dob = useRef();
+  const [error, setError] = useState();
+  const [regUserError, setRegUserError] = useState();
+
+  function validatePassword() {
+    if (
+      /^(?=.{8,})(?=.*[a-z])(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$/.test(
+        password.current.value
+      )
+    ) {
+      setError("");
+      return true;
+    }
+    setError(
+      "Your password must contain a minimum of eight characters, at least one letter,one capital letter, one number and one special character"
+    );
+    return false;
+  }
+
+  function deltaDate(input, days, months, years) {
+    return new Date(
+      input.getFullYear() + years,
+      input.getMonth() + months,
+      Math.min(
+        input.getDate() + days,
+        new Date(
+          input.getFullYear() + years,
+          input.getMonth() + months + 1,
+          0
+        ).getDate()
+      )
+    );
+  }
 
   const handleClick = async (e) => {
     e.preventDefault();
-    console.log(password.current.value);
-    console.log(confPassword.current.value);
+    if (validatePassword() === false) {
+      return;
+    }
     if (password.current.value === confPassword.current.value) {
       const user = {
         username: username.current.value,
@@ -23,12 +56,16 @@ function RegisterForm() {
         password: password.current.value,
         dob: dob.current.value,
         gender: gender.current.value,
+        profilePicture: "DEFAULT.png",
       };
       try {
         await axios.post("/auth/register", user);
         navigate("/login");
       } catch (err) {
-        console.log(err);
+        console.log(err.message);
+        if (err.message.includes("403")) {
+          setRegUserError("Username or email is already taken");
+        }
       }
     } else {
       confPassword.current.setCustomValidity("The passwords aren't the same");
@@ -40,6 +77,24 @@ function RegisterForm() {
       className="w-4/5 md:w-3/5 xl:w-2/5 2xl:w-2/6 flex flex-col items-center rounded-lg py-9
     px-6 bg-bg_login scale-75 lg:scale-100 my-10"
     >
+      {error && (
+        <p
+          className="text-center bg-no_acc px-4 py-2 rounded-lg mt-2 mb-4 text-main"
+          style={{ fontFamily: "Baloo2" }}
+        >
+          {error}
+        </p>
+      )}
+
+      {regUserError && (
+        <p
+          className="text-center bg-no_acc px-4 py-2 rounded-lg mt-2 mb-4 text-main"
+          style={{ fontFamily: "Baloo2" }}
+        >
+          {regUserError}
+        </p>
+      )}
+
       <span
         className="text-5xl  font-bold mb-9 mx-5 text-secondary"
         style={{ fontFamily: "Josefin" }}
@@ -58,16 +113,19 @@ function RegisterForm() {
               className="block text-logo text-lg font-bold ml-2"
               style={{ fontFamily: "Baloo2" }}
             >
-              Uersname:
+              Username:
             </label>
             <div className="flex items-center border-b border-secondary py-2">
               <input
+                required
                 ref={username}
                 type="text"
                 placeholder="JaneDoe"
                 aria-label="username"
                 className="appearance-none bg-bg_login border-none w-full text-main mr-3 py-1 px-2 leading-tight focus:outline-none"
                 id="username"
+                minLength="4"
+                maxLength="30"
               />
             </div>
           </div>
@@ -103,6 +161,7 @@ function RegisterForm() {
         </label>
         <div className="flex items-center border-b border-secondary py-2">
           <input
+            required
             ref={email}
             type="email"
             placeholder="JaneDoe@gmail.com"
@@ -122,12 +181,14 @@ function RegisterForm() {
             </label>
             <div className="flex items-center border-b border-secondary py-2">
               <input
+                required
                 ref={password}
                 type="password"
-                placeholder="•••••••"
+                placeholder="••••••••"
                 aria-label="Password"
                 className="appearance-none bg-bg_login border-none w-full text-main mr-3 py-1 px-2 leading-tight focus:outline-none"
                 id="pass"
+                minLength="8"
               />
             </div>
           </div>
@@ -141,9 +202,10 @@ function RegisterForm() {
             </label>
             <div className="flex items-center border-b border-secondary py-2">
               <input
+                required
                 ref={confPassword}
                 type="password"
-                placeholder="•••••••"
+                placeholder="••••••••"
                 aria-label="ConfPassword"
                 className="appearance-none bg-bg_login border-none w-full text-main mr-3 py-1 px-2 leading-tight focus:outline-none"
                 id="conf_pass"
@@ -162,12 +224,19 @@ function RegisterForm() {
           {" "}
           {/*set the max and min value for the date (min:16 y | max:117 y)*/}
           <input
+            required
             ref={dob}
             type="date"
             placeholder="01/01/1990"
             aria-label="DateOfBirth"
             className="appearance-none bg-bg_login border-none w-full text-main mr-3 py-1 px-2 leading-tight focus:outline-none"
             id="date_of_birth"
+            min={deltaDate(new Date(), 0, 0, -118)
+              .toISOString()
+              .substring(0, 10)}
+            max={deltaDate(new Date(), 0, 0, -16)
+              .toISOString()
+              .substring(0, 10)}
           />
         </div>
 
@@ -178,6 +247,7 @@ function RegisterForm() {
           id="login_submit"
           name="login_submit"
           value="Register"
+          required
         />
       </form>
       <Link

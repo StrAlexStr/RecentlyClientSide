@@ -6,7 +6,12 @@ import { BsSignpost } from "react-icons/bs";
 import { AuthContext } from "../../context/AuthContext";
 import { SpinnerDotted } from "spinners-react";
 
-function MapBar({ isFollowingBar, profileUser }) {
+function MapBar({
+  isFollowingBar,
+  profileUser,
+  setSelectedPostId,
+  isCurrentUser,
+}) {
   const [posts, setPosts] = useState([]);
   const { user } = useContext(AuthContext);
   const [postsLoaded, setPostsLoaded] = useState(false);
@@ -14,17 +19,29 @@ function MapBar({ isFollowingBar, profileUser }) {
   useEffect(() => {
     const postsFetch = async () => {
       if (isFollowingBar) {
-        const res = await axios.get(`/posts/get/following/${user._id}`);
-        setPosts(res.data);
-        setPostsLoaded(true);
+        if (user) {
+          const res = await axios.get(`/posts/get/following/${user._id}`, {
+            headers: {
+              "x-access-token": localStorage.getItem("token"),
+            },
+          });
+          setPosts(res.data);
+          setPostsLoaded(true);
+        }
       } else {
-        const res = await axios.get(`/posts/all_posts/${profileUser._id}`);
-        setPosts(res.data);
-        setPostsLoaded(true);
+        if (profileUser && profileUser._id) {
+          const res = await axios.get(`/posts/all_posts/${profileUser._id}`, {
+            headers: {
+              "x-access-token": localStorage.getItem("token"),
+            },
+          });
+          setPosts(res.data);
+          setPostsLoaded(true);
+        }
       }
     };
     postsFetch();
-  }, [profileUser, user]);
+  }, [profileUser, user, isFollowingBar, setSelectedPostId]);
 
   return (
     <div className="bg-white bg-opacity-50 backdrop-filter backdrop-blur-md w-1/5 p-6 absolute z-10 inset-y-0 right-0 m-5 overflow-auto rounded-lg flex flex-col items-center scrollbar scrollbar-thumb-secondary-dark scrollbar-thin scrollbar-thumb-rounded-lg">
@@ -42,6 +59,8 @@ function MapBar({ isFollowingBar, profileUser }) {
                 isFullPost={isFollowingBar}
                 postData={postData}
                 key={postData._id}
+                setSelectedPostId={setSelectedPostId}
+                isCurrentUser={isCurrentUser}
               />
             );
           })
