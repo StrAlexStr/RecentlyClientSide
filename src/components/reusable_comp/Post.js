@@ -64,9 +64,6 @@ function Post({ isFullPost, postData, setSelectedPostId, isCurrentUser }) {
                   }}
                 />
               </button>
-              {/* <button className="mx-3 hover:text-secondary-dark">
-                <HiOutlineArrowsExpand />
-              </button> */}
             </div>
           )}
           <span className=" text-main font-semibold text-opacity-100 m-1 truncate ">

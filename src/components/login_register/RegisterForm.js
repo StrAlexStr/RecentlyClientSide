@@ -221,8 +221,6 @@ function RegisterForm() {
           Date of birth:
         </label>
         <div className="flex items-center border-b border-secondary py-2">
-          {" "}
-          {/*set the max and min value for the date (min:16 y | max:117 y)*/}
           <input
             required
             ref={dob}

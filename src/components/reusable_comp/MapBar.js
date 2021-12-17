@@ -71,7 +71,7 @@ function MapBar({
               style={{ fontFamily: "Baloo2" }}
             >
               {isFollowingBar
-                ? "You are currently following no one"
+                ? "This feed is currently empty"
                 : "No posts to be seen here"}
               <div className="flex flex-row items-center justify-center mt-10  animate-bounce ">
                 {isFollowingBar ? (
